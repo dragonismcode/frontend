@@ -4,17 +4,22 @@ var odometer = document.getElementById("odometer");
 var titletext = document.getElementById("titletext");
 var authortext = document.getElementById("authortext");
 
-if(!localStorage.getItem("rumbleUser")) {
-  localStorage.setItem("rumbleUser", JSON.stringify({
-    id: "_c276782",
-    slug: "Bongino",
-    title: "The Dan Bongino Show",
-    type: "channel",
-    name: "Bongino",
-  }));
+if (window.location.href.includes("?id=")) {
+  localStorage.setItem(
+    "rumbleUser",
+    JSON.stringify({
+      id: window.location.href.split("?id=")[1]
+    })
+  );
+} else if (!localStorage.getItem("rumbleUser")) {
+  localStorage.setItem(
+    "rumbleUser",
+    JSON.stringify({
+      id: "_c276782"
+    })
+  );
 }
 
-var refreshInterval = setInterval(refresher, 2000);
 loadCounter();
 
 async function loadId() {
@@ -23,20 +28,30 @@ async function loadId() {
   );
   if (!response)
     return console.log("User cancellled prompt... that's pretty sad.");
-
-  await fetch("https://api.rumblecounter.live/search/users?query=" + response)
-    .then((res) => res.text())
+  fetch("https://api.rumblecounter.live/search/users?query=" + response)
+    .then((res) => {
+      if (res.status == 200) {
+        return res.text();
+      } else if (res.status == 404) {
+        return alert("User with the specified query was not found!");
+      }
+    })
     .then((data) => {
       console.log(data);
-      if (data !== "not found!") {
+      if (data[0]) {
         data = JSON.parse(data);
         localStorage.setItem("rumbleUser", JSON.stringify(data[0]));
         titletext.innerText = data[0].title;
-        titletext.href = `https://rumble.com/c/${data[0].slug}`
-        clearInterval(refreshInterval);
-        loadCounter();
+        titletext.href = `https://rumble.com/c/${data[0].slug}`;
+        if (window.location.href.includes("?id=")) {
+          window.location.href = window.location.href.split("?id=")[1] =
+            "?id=" + data[0].id;
+        } else {
+          window.location.href =
+            window.location.href + "?id=" + data[0].id + "";
+        }
       } else {
-        alert("No users found.");
+        alert("an unexpected error occured...");
       }
     });
 }
@@ -45,42 +60,29 @@ async function loadId() {
 //k
 
 function loadCounter() {
-  fetch("https://api.rumblecounter.live/user?id=" + JSON.parse(localStorage.getItem("rumbleUser")).id)
-    .then(function (response) {
-      //The API call was successful!
-      if (response.ok) {
-        return response.json();
-      } else {
-        return Promise.reject(response);
-      }
-      //return response;
-    })
-    .then(function (res) {
+  fetch(
+    "https://api.rumblecounter.live/user?id=" +
+      JSON.parse(localStorage.getItem("rumbleUser")).id
+  )
+    .then((res) => res.json())
+    .then((res) => {
       odometer.innerHTML = res.followers;
       titletext.innerText = res.title;
-      titletext.href = `https://rumble.com/c/${res.slug}`
-    })
-    .catch(function (err) {
-      // There was an error
-      console.warn("Something went wrong.", err);
+      titletext.href = `https://rumble.com/c/${res.slug}`;
     });
+  setTimeout(refresher, 2000);
 }
 
 function refresher() {
-  fetch("https://api.rumblecounter.live/user?id=" + JSON.parse(localStorage.getItem("rumbleUser")).id)
-    .then(function (response) {
-      // The API call was successful!
-      if (response.ok) {
-        return response.json();
-      } else {
-        return Promise.reject(response);
-      }
-    })
-    .then(function (res) {
+  fetch(
+    "https://api.rumblecounter.live/user?id=" +
+      JSON.parse(localStorage.getItem("rumbleUser")).id
+  )
+    .then((res) => res.json())
+    .then((res) => {
       odometer.innerHTML = res.followers;
-    })
-    .catch(function (err) {
-      // There was an error
-      console.warn("Something went wrong.", err);
+      titletext.innerText = res.title;
+      titletext.href = `https://rumble.com/c/${res.slug}`;
     });
+  setTimeout(refresher, 2000);
 }
