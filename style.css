@@ -20,7 +20,7 @@ body {
 }
 
 .odometer {
-  font-size: 15.5vw;
+  font-size: 15.5rem;
 }
 
 a {
@@ -30,7 +30,7 @@ a {
 
 .title {
   letter-spacing: 1.5px;
-  font-size: 40px;
+  font-size: 41px;
   line-height: 0;
 }
 
@@ -45,6 +45,18 @@ a {
 }
 .hide {
   opacity: 0 !important;
+}
+
+#footerBar {
+    position: absolute;
+    height: 40px;
+    width: 100%;
+    background: #224466;
+  margin: 0 auto;
+}
+.footerLink {
+    color: #808080;
+    margin: 0px 50px 0px 0px;
 }
 
 .odometer.odometer-auto-theme,
@@ -125,15 +137,7 @@ a {
   -o-transform: translateY(-100%);
   transform: translateY(-100%);
 }
-.odometer.odometer-auto-theme.odometer-animating-down .odometer-ribbon-inner,
-.odometer.odometer-theme-default.odometer-animating-down
-  .odometer-ribbon-inner {
-  -webkit-transform: translateY(-100%);
-  -moz-transform: translateY(-100%);
-  -ms-transform: translateY(-100%);
-  -o-transform: translateY(-100%);
-  transform: translateY(-100%);
-}
+
 .odometer.odometer-auto-theme.odometer-animating-down.odometer-animating
   .odometer-ribbon-inner,
 .odometer.odometer-theme-default.odometer-animating-down.odometer-animating
@@ -148,14 +152,4 @@ a {
   -ms-transform: translateY(0);
   -o-transform: translateY(0);
   transform: translateY(0);
-}
-
-.odometer.odometer-auto-theme,
-.odometer.odometer-theme-default {
-  font-family: "Helvetica Neue", sans-serif;
-  line-height: 1.1em;
-}
-.odometer.odometer-auto-theme .odometer-value,
-.odometer.odometer-theme-default .odometer-value {
-  text-align: center;
 }
