@@ -20,7 +20,7 @@ body {
 }
 
 .odometer {
-  font-size: 16vw;
+  font-size: 15.5vw;
 }
 
 a {
@@ -30,7 +30,7 @@ a {
 
 .title {
   letter-spacing: 1.5px;
-  font-size: 42px;
+  font-size: 40px;
   line-height: 0;
 }
 
